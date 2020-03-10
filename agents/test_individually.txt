@@ -1,0 +1,6 @@
+environments.parallel_py_environment_test
+# TODO(b/135926163): random_??_environment_tests time out when inside
+# TestSuite.
+environments.random_py_environment_test
+environments.random_tf_environment_test
+bandits.agents.examples.v1.trainer_test
