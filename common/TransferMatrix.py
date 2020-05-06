@@ -5,7 +5,7 @@
 import os 
 import sys
 os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-sys.path.append("d:\\MyCode\\filmmaker\\")
+sys.path.append("/home/peterjaq/project/optical-film-maker/")
 print(sys.path)
 
 import numpy as np
@@ -332,7 +332,7 @@ class OpticalModeling(object):
 
     @property
     def simulation_result(self):
-
+        #print(self.total_Absorption, self.Transmission, self.Reflection)
         return self.total_Absorption, self.Transmission, self.Reflection
 
 
@@ -346,11 +346,21 @@ if __name__ == "__main__":
             "SiO2_Malitson",
             "Zn_Werner",
             "SiO2_Malitson",
+            # "Zn_Werner",
             "Cu_Johnson"
             ]
         #libname = "./old_work/data/Index_Refraction_Zn0.16+SiO2.csv"
         OM = OpticalModeling(Device, 
                              WLrange=(350, 1200))
-        OM.RunSim(thickness=[0, 100, 100, 100, 100])
-        Jsc = OM.JscReport()
+        OM.RunSim(thickness=[79, 32, 81, 100])
+        x = np.arange(350, 1200, 1)
+
+        print(f'优化过程中的状态: [吸收]{np.mean(OM.simulation_result[0])}, \
+                                [投射]{np.mean(OM.simulation_result[1])}, \
+                                [反射]{np.mean(OM.simulation_result)}')
+
+        plt.plot(x, OM.simulation_result[0], 'r--',
+                x, OM.simulation_result[1], 'bs',
+                x, OM.simulation_result[2], 'g--')
+                
         plt.show()

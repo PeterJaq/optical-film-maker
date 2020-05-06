@@ -1,0 +1,6 @@
+/agents/
+/.old_work/
+/research/
+/log/*
+/db/*
+/common/__pycache__/*

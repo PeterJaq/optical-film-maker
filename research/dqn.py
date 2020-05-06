@@ -1,19 +1,21 @@
 
+import sys
+sys.path.append('./agents/')
+sys.path.append('/home/peterjaq/project/optical-film-maker')
+
+print(sys.path)
+
 from common.DataLoader import MaterialLoader
 from common.TransferMatrix import OpticalModeling
 from common.Config import FilmConfig
 from common.utils.FilmLoss import film_loss
-
-
-import sys
-sys.path.append('./agents/')
 
 from tf_agents.agents.dqn import dqn_agent
 from tf_agents.drivers import dynamic_step_driver
 from tf_agents.eval import metric_utils
 from tf_agents.metrics import tf_metrics
 from tf_agents.networks import q_network
-from tf_agents.policies import random_tf_policy
+from tf_agents.policies import q_policy, random_py_policy
 from tf_agents.replay_buffers import tf_uniform_replay_buffer
 from tf_agents.trajectories import trajectory
 from tf_agents.environments import tf_py_environment
@@ -25,7 +27,7 @@ import tensorflow as tf
 import numpy as np
 
 from common.FilmEnvironment import FilmEnvironment
-filmEnv = FilmEnvironment(config_path='Zn.ini')
+filmEnv = FilmEnvironment(config_path='Zn.ini', random_init=True, debug=True)
 
 filmEnv = tf_py_environment.TFPyEnvironment(filmEnv)
 
@@ -130,8 +132,9 @@ returns = [avg_return]
 for _ in range(num_iterations):
 
   # Collect a few steps using collect_policy and save to the replay buffer.
-  for _ in range(collect_steps_per_iteration):
-    collect_step(filmEnv, agent.collect_policy, replay_buffer)
+  # for _ in range(collect_steps_per_iteration):
+  #   collect_step(train_env, agent.collect_policy, replay_buffer)
+  collect_data(filmEnv, agent.collect_policy, replay_buffer, 100)
 
   # Sample a batch of data from the buffer and update the agent's network.
   experience, unused_info = next(iterator)
@@ -142,10 +145,12 @@ for _ in range(num_iterations):
   if step % log_interval == 0:
     print('step = {0}: loss = {1}'.format(step, train_loss))
 
-  if step % eval_interval == 0:
-    avg_return = compute_avg_return(filmEnv, agent.policy, num_eval_episodes)
-    print('step = {0}: Average Return = {1}'.format(step, avg_return))
-    returns.append(avg_return)
+  # if step % eval_interval == 0:
+  #   avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+  #   print('step = {0}: Average Return = {1}'.format(step, avg_return))
+  #   returns.append(avg_return)                                                                   
+
+
 
 
 

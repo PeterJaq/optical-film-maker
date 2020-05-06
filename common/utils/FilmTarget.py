@@ -3,7 +3,7 @@ import numpy as np
 def film_target(target_config, WLstep=1, WLrange=[280,1000]):
     target = dict()
 
-    for i in ['Absorption', 'Transmission', 'Refraction']:
+    for i in ['Absorption', 'Transmission', 'Reflection']:
         target[i] = cal_target(target_config=target_config[i], WLstep=WLstep, WLrange=WLrange)
 
     return target
@@ -25,7 +25,7 @@ def cal_target(target_config, WLstep, WLrange):
 def film_weight(weight_config, WLstep=1, WLrange=[280, 1200]):
     weight = dict()
 
-    for i in ['Absorption', 'Transmission', 'Refraction']:
+    for i in ['Absorption', 'Transmission', 'Reflection']:
         weight[i] = cal_weight(weight_config=weight_config[i], WLstep=WLstep, WLrange=WLrange)
 
     return weight
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     target_config = {
         'Absorption'  : [[280, 0], [300, 0.5], [1000, 1]],
         'Transmission': [[280, 1], [300, 0.5], [1000, 0]],
-        'Refraction'  : [[280, 0], [300, 0], [1000, 0]],
+        'Reflection'  : [[280, 0], [300, 0], [1000, 0]],
     }
 
     target = film_target(target_config)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     weight_config = {
         'Absorption'  : [[280, 0], [300, 0.5], [1000, 1]],
         'Transmission': [[280, 1], [300, 0.5], [1000, 0]],
-        'Refraction'  : [[280, 0], [300, 0], [1000, 0]],
+        'Reflection'  : [[280, 0], [300, 0], [1000, 0]],
     }
 
     weight = film_weight(weight_config)
