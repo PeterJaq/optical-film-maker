@@ -3,4 +3,5 @@
 /research/
 /log/*
 /db/*
-/common/__pycache__/*
+/common/__pycache__/
+.gitignore

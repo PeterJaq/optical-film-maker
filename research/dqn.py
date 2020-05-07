@@ -45,7 +45,7 @@ num_eval_episodes = 10  # @param {type:"integer"}
 eval_interval = 1000  # @param {type:"integer"}
 
 
-fc_layer_params = (100,)
+fc_layer_params = (64, 128, 64)
 
 q_net = q_network.QNetwork(
     filmEnv.observation_spec(),
@@ -66,27 +66,13 @@ agent = dqn_agent.DqnAgent(
 
 agent.initialize()
 
-print('Observation Spec:')
-print(filmEnv.time_step_spec())
-print('Action Spec:')
-print(filmEnv.action_spec())
-
 eval_policy = agent.policy
 collect_policy = agent.collect_policy
-
-random_policy = random_tf_policy.RandomTFPolicy(filmEnv.time_step_spec(),
-                                                filmEnv.action_spec())
-
 
 replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
     data_spec=agent.collect_data_spec,
     batch_size=filmEnv.batch_size,
     max_length=replay_buffer_max_length)
-
-agent.train = function(agent.train)
-
-# Reset the train step
-agent.train_step_counter.assign(0)
 
 def collect_step(environment, policy, buffer):
   time_step = environment.current_time_step()
@@ -131,24 +117,17 @@ returns = [avg_return]
 
 for _ in range(num_iterations):
 
-  # Collect a few steps using collect_policy and save to the replay buffer.
-  # for _ in range(collect_steps_per_iteration):
-  #   collect_step(train_env, agent.collect_policy, replay_buffer)
-  collect_data(filmEnv, agent.collect_policy, replay_buffer, 100)
+  collect_data(filmEnv, agent.collect_policy, replay_buffer, batch_size)
 
   # Sample a batch of data from the buffer and update the agent's network.
-  experience, unused_info = next(iterator)
+  experience, _= next(iterator)
   train_loss = agent.train(experience).loss
 
   step = agent.train_step_counter.numpy()
-
+  print(train_loss)
   if step % log_interval == 0:
     print('step = {0}: loss = {1}'.format(step, train_loss))
-
-  # if step % eval_interval == 0:
-  #   avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
-  #   print('step = {0}: Average Return = {1}'.format(step, avg_return))
-  #   returns.append(avg_return)                                                                   
+                                                           
 
 
 

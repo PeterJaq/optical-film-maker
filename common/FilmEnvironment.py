@@ -195,14 +195,17 @@ class FilmEnvironment(py_environment.PyEnvironment):
         # Exit Term
         if self._episode_ended:
             if error_structure:
-                return ts.termination(observation = np.array(observation, dtype=np.float32),
-            reward      = -1)
+                reward = -1
             elif reach_performance_threshold:
-                return ts.termination(observation = np.array(observation, dtype=np.float32),
-                        reward      = 1)
+                reward = 1
             elif reach_round_threshold:
-                return ts.termination(observation = np.array(observation, dtype=np.float32),
-                        reward      = -0.1)
+                reward = -0.1
+
+            # TODO: save reward
+            if self.debug:
+                pass
+            return ts.termination(observation = np.array(observation, dtype=np.float32),
+                        reward      = reward)
             
         # 更新条件
         elif observation_loss < self.pre_observation:
@@ -210,11 +213,20 @@ class FilmEnvironment(py_environment.PyEnvironment):
             self.pre_observation = min(observation_loss, self.pre_observation)
             self.round = 0
             
+            # TODO: save reward
+            if self.debug:
+                pass 
+
             return ts.transition(observation = np.array(observation, dtype=np.float32),
                                  reward      = reward,
                                  discount    = 1.0)
         else:
             self.round += 1
+            reward = -0.01
+            # TODO: save reward
+            if self.debug:
+                pass 
+
             return ts.transition(observation = np.array(observation, dtype=np.float32),
-                                 reward      = 0,
+                                 reward      = reward,
                                  discount    = 1.0)
