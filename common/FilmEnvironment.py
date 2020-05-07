@@ -201,9 +201,9 @@ class FilmEnvironment(py_environment.PyEnvironment):
             elif reach_round_threshold:
                 reward = -0.1
 
-            # TODO: save reward
             if self.debug:
-                pass
+                self.logger.log_record_run([reward, observation_loss])
+
             return ts.termination(observation = np.array(observation, dtype=np.float32),
                         reward      = reward)
             
@@ -213,9 +213,8 @@ class FilmEnvironment(py_environment.PyEnvironment):
             self.pre_observation = min(observation_loss, self.pre_observation)
             self.round = 0
             
-            # TODO: save reward
             if self.debug:
-                pass 
+                self.logger.log_record_run([reward, observation_loss])
 
             return ts.transition(observation = np.array(observation, dtype=np.float32),
                                  reward      = reward,
@@ -223,9 +222,9 @@ class FilmEnvironment(py_environment.PyEnvironment):
         else:
             self.round += 1
             reward = -0.01
-            # TODO: save reward
+
             if self.debug:
-                pass 
+                self.logger.log_record_run([reward, observation_loss])
 
             return ts.transition(observation = np.array(observation, dtype=np.float32),
                                  reward      = reward,
